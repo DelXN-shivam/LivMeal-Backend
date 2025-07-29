@@ -1,17 +1,17 @@
 import express from 'express'
 import userRouter from './user.js';
-import messRouter from './mess.js';
+import messRouter from './messRoutes.js';
+import { studentRouter } from './studentRoutes.js';
+import { adminRouter } from './adminRoutes.js';
 
 const rootRouter = express.Router();
-// rootRouter.use("/user" , userRouter);
 
 
 
-
+//routes
 rootRouter.use("/mess" , messRouter);
-rootRouter.get("/" , (req, res) => {
-    res.json({
-        message : "Inside root router"
-    })
-})
+rootRouter.use("/student" , studentRouter);
+rootRouter.use("/admin" , adminRouter);
+
+
 export default rootRouter;

@@ -1,3 +1,4 @@
+
 import mongoose from 'mongoose';
 
 const messSchema = new mongoose.Schema({
@@ -65,6 +66,11 @@ const messSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId
     },
   ],
+  isVerified : {
+    type : String,
+    enum : ['pending' , 'verified'],
+    default : "pending"
+  }
 }, { timestamps: true });
 
 export default mongoose.model('Mess', messSchema);

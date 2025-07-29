@@ -1,0 +1,56 @@
+APi Structure : 
+
+BASE_URL : http://localhost:3500/api/v1
+
+1. Mess API : http://localhost:3500/api/v1/mess
+    i) Register : /register
+        sampleBody : {
+  "messName": "Green Leaf Tiffin",
+  "messOwnerName": "Rajesh Sharma",
+  "email": "greenleaftiffin@example.com",
+  "contact": "9876543210",
+  "messAddress": "123, MG Road, Pune, Maharashtra",
+  "mealTypes": "veg",
+  "messTimings": {
+    "breakfast": {
+      "from": "07:30 AM",
+      "to": "09:00 AM"
+    },
+    "lunch": {
+      "from": "12:30 PM",
+      "to": "02:30 PM"
+    },
+    "dinner": {
+      "from": "07:30 PM",
+      "to": "09:00 PM"
+    }
+  },
+  "deliveryAvailable": true,
+  "serviceRadius": 5,
+  "mealData": {
+    "dailyMealPrice": 80,
+    "weeklyMealPrice": 500,
+    "monthlyMealPrice": 1800,
+    "trialMealPrice": 50,
+    "onGoingDiscount": true,
+    "discountOffer": "10% off for first 3 days"
+  },
+  "photos": [
+    "64f5c8e34f6b9d001e8a9f01",
+    "64f5c8e34f6b9d001e8a9f02",
+    "64f5c8e34f6b9d001e8a9f03",
+    "64f5c8e34f6b9d001e8a9f04"
+  ]
+}
+
+    ii) Login by contact : /login/?contact=9876543210
+
+    iii) update by id : /update/id
+                    eg : /update/688876e74eff51e88126a9b6
+
+      req.body : Data to be updated 
+
+    iv) fetch all messes : /all
+
+    v) fetch by id : /:id
+      eg : /mess/688876e74eff51e88126a9b6
