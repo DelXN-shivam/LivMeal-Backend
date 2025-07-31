@@ -38,37 +38,37 @@ export const studentRegister = async (req, res) => {
 }
 
 
-export const registerContact = async (req, res) => {
-    try {
-        const contact = req.query.contact;
+// export const registerContact = async (req, res) => {
+//     try {
+//         const contact = req.query.contact;
 
-        if (!contact) {
-            return res.json({
-                message: "please provide contact"
-            })
-        }
+//         if (!contact) {
+//             return res.json({
+//                 message: "please provide contact"
+//             })
+//         }
 
-        const existingStudent = await Student.findOne({ contact });
-        if (existingStudent) {
-            return res.status(409).json({
-                message: "Student exists for the given contact"
-            })
-        }
+//         const existingStudent = await Student.findOne({ contact });
+//         if (existingStudent) {
+//             return res.status(409).json({
+//                 message: "Student exists for the given contact"
+//             })
+//         }
 
-        return res.status(200).json({
-            message: "Student found , register successfull",
-            data: existingStudent
-        })
+//         return res.status(200).json({
+//             message: "Student found , register successfull",
+//             data: existingStudent
+//         })
 
 
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json({
-            message: "Error during login by phone number",
-            error: err.message
-        })
-    }
-}
+//     } catch (err) {
+//         console.error(err);
+//         return res.status(500).json({
+//             message: "Error during login by phone number",
+//             error: err.message
+//         })
+//     }
+// }
 
 
 export const loginByContact = async (req , res) => {

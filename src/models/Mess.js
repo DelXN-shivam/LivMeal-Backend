@@ -1,4 +1,3 @@
-
 import mongoose from 'mongoose';
 
 const messSchema = new mongoose.Schema({
@@ -49,27 +48,23 @@ const messSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  serviceRadius: {
-    type: Number, // in kilometers or meters, you decide
-    // required: true,
-  },
-  mealData: {
+  subscription: [{
     dailyMealPrice: { type: Number },
     weeklyMealPrice: { type: Number },
     monthlyMealPrice: { type: Number },
     trialMealPrice: { type: Number },
     onGoingDiscount: { type: Boolean, default: false },
     discountOffer: { type: String, default: '' },
-  },
+  }],
   photos: [
     {
       type: mongoose.Schema.Types.ObjectId
     },
   ],
-  isVerified : {
-    type : String,
-    enum : ['pending' , 'verified'],
-    default : "pending"
+  isVerified: {
+    type: String,
+    enum: ['pending', 'verified'],
+    default: "pending"
   }
 }, { timestamps: true });
 

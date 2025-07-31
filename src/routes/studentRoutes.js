@@ -1,5 +1,6 @@
 import express from 'express'
-import { loginByContact, registerContact, studentRegister, updateById } from '../controllers/studentController.js';
+//import { loginByContact, registerContact, studentRegister, updateById } from '../controllers/studentController.js';
+import { loginByContact, studentRegister, updateById } from '../controllers/studentController.js';
 
 
 export const studentRouter = express.Router();
