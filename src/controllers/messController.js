@@ -72,20 +72,33 @@ export const updateById = async (req, res) => {
     const { id } = req.params;
     const updateFields = req.body;
 
-    // Filter out empty string or undefined fields
+    // Define allowed fields from your schema
+    const allowedFields = [
+        'messName', 'messOwnerName', 'email', 'contact', 'messAddress',
+        'mealTypes', 'messTimings', 'deliveryAvailable',
+        'subscription', 'photos', 'isVerified'
+    ];
+
+    // Filter out invalid fields
     const sanitizedFields = {};
     Object.entries(updateFields).forEach(([key, value]) => {
-        if (
-            value !== undefined &&
-            value !== '' &&
-            !(typeof value === 'object' && Object.keys(value).length === 0)
-        ) {
+        if (allowedFields.includes(key) && value !== undefined && value !== '' &&
+            !(typeof value === 'object' && Object.keys(value).length === 0)) {
             sanitizedFields[key] = value;
         }
     });
 
+    // Check if any valid fields were provided
+    if (Object.keys(sanitizedFields).length === 0) {
+        return res.status(400).json({ message: 'No valid fields provided for update' });
+    }
+
     try {
-        const updatedMess = await Mess.findByIdAndUpdate(id, { $set: sanitizedFields }, { new: true, runValidators: true });
+        const updatedMess = await Mess.findByIdAndUpdate(
+            id,
+            { $set: sanitizedFields },
+            { new: true, runValidators: true, strict: true }
+        );
 
         if (!updatedMess) {
             return res.status(404).json({ message: 'Mess not found' });

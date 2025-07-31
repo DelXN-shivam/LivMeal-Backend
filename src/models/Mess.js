@@ -63,9 +63,9 @@ const messSchema = new mongoose.Schema({
   ],
   isVerified: {
     type: String,
-    enum: ['pending', 'verified'],
+    enum: ['pending', 'verified' , 'rejected'],
     default: "pending"
   }
-}, { timestamps: true });
+}, { timestamps: true , strict : true });
 
 export default mongoose.model('Mess', messSchema);
