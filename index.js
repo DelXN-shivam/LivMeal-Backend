@@ -1,9 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import { connectDB } from './src/config/db.js';
-import logger from './src/config/logger.js';
 import rootRouter from './src/routes/index.js';
-import cors from 'cors'
+import cors from 'cors';
 
 // Load env variables first
 dotenv.config();
@@ -14,32 +13,82 @@ const PORT = process.env.PORT || 3500;
 // Middleware to parse JSON
 app.use(express.json());
 
-// Updated CORS configuration for production
+// CORS configuration
 app.use(
   cors({
-    origin: process.env.NODE_ENV === 'production' 
-      ? ['https://liv-meal-backend.vercel.app']
-      : ['http://localhost:3000', 'http://localhost:3001'],
+    origin: '*', // Allow all origins for now
     credentials: true,
   })
 );
 
-// Connect to MongoDB
-connectDB();
-
-// Sample route
-app.get("/", (req, res) => {    
-    res.send({
-        message: `LivMeal Server running at PORT: ${PORT} which is Development mode`
-    });
+// Health check route (no DB connection needed)
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    message: "LivMeal Server is healthy",
+    timestamp: new Date().toISOString()
+  });
 });
 
-app.use("/api/v1", rootRouter);
+// Main route with error handling
+app.get("/", async (req, res) => {
+  try {
+    // Try to connect to database
+    await connectDB();
+    
+    res.status(200).json({
+      message: "LivMeal Server running successfully!",
+      status: "Connected to Database",
+      environment: process.env.NODE_ENV || 'development',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Database connection error:', error.message);
+    res.status(200).json({
+      message: "LivMeal Server is running",
+      status: "Database connection failed",
+      error: error.message,
+      environment: process.env.NODE_ENV || 'development',
+      timestamp: new Date().toISOString()
+    });
+  }
+});
 
-// Start server (for local development)
+// API routes with database connection middleware
+app.use("/api/v1", async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    console.error('API Database connection error:', error.message);
+    res.status(500).json({
+      error: "Database connection failed",
+      message: error.message
+    });
+  }
+}, rootRouter);
+
+// Global error handler
+app.use((error, req, res, next) => {
+  console.error('Global error:', error);
+  res.status(500).json({
+    error: "Internal Server Error",
+    message: error.message
+  });
+});
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({
+    error: "Route not found",
+    message: `Route ${req.method} ${req.path} not found`
+  });
+});
+
+// Start server (for local development only)
 if (process.env.NODE_ENV !== 'production') {
   app.listen(PORT, () => {
-    logger.info(`🚀 Server started on port ${PORT} in Production mode`);
+    console.log(`🚀 Server started on port ${PORT}`);
   });
 }
 
