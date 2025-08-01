@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(
   cors({
     origin: process.env.NODE_ENV === 'production' 
-      ? ['https://your-frontend-domain.vercel.app']
+      ? ['https://liv-meal-backend.vercel.app']
       : ['http://localhost:3000', 'http://localhost:3001'],
     credentials: true,
   })
