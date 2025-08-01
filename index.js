@@ -16,10 +16,11 @@ app.use(express.json());
 // CORS configuration
 app.use(
   cors({
-    origin: '*', // Allow all origins for now
+    origin: ['http://localhost:3000', '*'], // Allow localhost:3000 and all origins
     credentials: true,
   })
 );
+
 
 // Health check route (no DB connection needed)
 app.get("/health", (req, res) => {
