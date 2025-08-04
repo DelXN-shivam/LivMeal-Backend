@@ -48,6 +48,10 @@ const messSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  serviceRadius: {
+    type: Number, // in kilometers
+    default: 0,
+  },
   subscription: [{
     dailyMealPrice: { type: Number },
     weeklyMealPrice: { type: Number },
