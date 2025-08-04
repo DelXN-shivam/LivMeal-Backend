@@ -19,7 +19,7 @@ export const studentRegister = async (req, res) => {
         }
 
         const newStudent = await Student.create({
-            name, email, contact, gender
+            name, email, contact, gender , isRegistered: true
         })
 
         return res.status(200).json({
@@ -136,3 +136,29 @@ export const updateById =  async (req, res) => {
     });
   }
 };
+
+export const getStudentById = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const student = await Student.findById(id).populate('favorites');
+
+        if (!student) {
+            return res.status(404).json({
+                message: "Student not found"
+            });
+        }
+
+        return res.status(200).json({
+            message: "Student found",
+            data: student
+        });
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({
+            message: "Error fetching student",
+            error: err.message
+        });
+    }
+}
