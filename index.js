@@ -36,7 +36,7 @@ app.get("/", async (req, res) => {
   try {
     // Try to connect to database
     await connectDB();
-    
+
     res.status(200).json({
       message: "LivMeal Server running successfully!",
       status: "Connected to Database",
@@ -92,6 +92,30 @@ if (process.env.NODE_ENV !== 'production') {
     console.log(`🚀 Server started on port ${PORT}`);
   });
 }
+
+//cronjob 
+// Add this to your existing routes or create api/cron.js
+app.get("/api/cron/keep-alive", async (req, res) => {
+  try {
+    console.log('Cron job executed at:', new Date().toISOString());
+
+    // Optionally reconnect to database or perform other initialization
+    await connectDB();
+
+    res.status(200).json({
+      message: "Server keep-alive successful",
+      timestamp: new Date().toISOString(),
+      status: "healthy"
+    });
+  } catch (error) {
+    console.error('Cron job error:', error);
+    res.status(500).json({
+      error: "Keep-alive failed",
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
 
 // Export for Vercel
 export default app;
