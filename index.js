@@ -16,7 +16,7 @@ app.use(express.json());
 // CORS configuration
 app.use(
   cors({
-    origin: ['http://localhost:3000', '*'], // Allow localhost:3000 and all origins
+    origin: ['http://localhost:3000', '*' , 'https://liv-meal-backend.vercel.app'], // Allow localhost:3000 and all origins
     credentials: true,
   })
 );
@@ -95,9 +95,18 @@ if (process.env.NODE_ENV !== 'production') {
 
 //cronjob 
 // Add this to your existing routes or create api/cron.js
+// cronjob - Ping your own Vercel base URL every 10 minutes
 cron.schedule('*/10 * * * *', async () => {
-  console.log('Running cron job...');
+  const URL = 'https://liv-meal-backend.vercel.app/'; // base URL
+
+  try {
+    const response = await fetch(URL);
+    console.log(`[CRON] Pinged ${URL} - Status: ${response.status} at ${new Date().toISOString()}`);
+  } catch (error) {
+    console.error('[CRON] Error pinging base URL:', error.message);
+  }
 });
+
 
 
 // Export for Vercel
