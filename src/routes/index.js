@@ -4,8 +4,8 @@ import messRouter from './messRoutes.js';
 import { studentRouter } from './studentRoutes.js';
 import { adminRouter } from './adminRoutes.js';
 
-const rootRouter = express.Router();
 
+const rootRouter = express.Router();
 
 
 //routes

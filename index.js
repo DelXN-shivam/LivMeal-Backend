@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import { connectDB } from './src/config/db.js';
 import rootRouter from './src/routes/index.js';
 import cors from 'cors';
-
+import cron from 'node-cron';
 // Load env variables first
 dotenv.config();
 
@@ -95,27 +95,10 @@ if (process.env.NODE_ENV !== 'production') {
 
 //cronjob 
 // Add this to your existing routes or create api/cron.js
-app.get("/api/cron/keep-alive", async (req, res) => {
-  try {
-    console.log('Cron job executed at:', new Date().toISOString());
-
-    // Optionally reconnect to database or perform other initialization
-    await connectDB();
-
-    res.status(200).json({
-      message: "Server keep-alive successful",
-      timestamp: new Date().toISOString(),
-      status: "healthy"
-    });
-  } catch (error) {
-    console.error('Cron job error:', error);
-    res.status(500).json({
-      error: "Keep-alive failed",
-      message: error.message,
-      timestamp: new Date().toISOString()
-    });
-  }
+cron.schedule('*/10 * * * *', async () => {
+  console.log('Running cron job...');
 });
+
 
 // Export for Vercel
 export default app;
