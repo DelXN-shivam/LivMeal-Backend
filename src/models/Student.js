@@ -20,9 +20,17 @@ const studentSchema = new mongoose.Schema({
         type : Boolean,
         default: false
     },  
+    subscribedMess : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Mess'   
+    },
+    subscription : {
+        type: mongoose.Schema.Types.ObjectId,   
+        ref: 'Subscription' 
+    },
     favorites: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Mess'   // Make sure 'mess' matches your Mess model name
+    ref: 'Mess'   
   }]
 })
 

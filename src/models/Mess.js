@@ -52,17 +52,15 @@ const messSchema = new mongoose.Schema({
     type: Number, // in kilometers
     default: 0,
   },
-  subscription: [{
-    dailyMealPrice: { type: Number },
-    weeklyMealPrice: { type: Number },
-    monthlyMealPrice: { type: Number },
-    trialMealPrice: { type: Number },
-    onGoingDiscount: { type: Boolean, default: false },
-    discountOffer: { type: String, default: '' },
-  }],
+  subscriptionPlans: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Subscription', 
+    },
+  ],
   photos: [
     {
-      type: mongoose.Schema.Types.ObjectId
+      type: String
     },
   ],
   isVerified: {

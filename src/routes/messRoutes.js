@@ -1,5 +1,6 @@
 import express from 'express'
 import { fetchAllMess, fetchById, loginByContact, messRegister, updateById } from '../controllers/messController.js';
+import { addSubscriptionMess } from '../controllers/subscriptionController.js';
 
 const messRouter = express.Router();
 
@@ -9,14 +10,6 @@ messRouter.post("/login" , loginByContact)
 messRouter.patch('/update/:id', updateById)
 messRouter.get("/all" , fetchAllMess);
 messRouter.get("/:id" , fetchById);
-
-
-
-messRouter.use("/" , (req, res) => {
-    res.json({
-        message : "Inside mess Router"
-    })
-    
-})
+messRouter.post("/addSubscription", addSubscriptionMess);
 
 export default messRouter;
