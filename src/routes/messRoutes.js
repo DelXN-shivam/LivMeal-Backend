@@ -5,7 +5,7 @@ import { addSubscriptionMess } from '../controllers/subscriptionController.js';
 const messRouter = express.Router();
 
 
-messRouter.post("/register" , messRegister )
+messRouter.post("/register" , messRegister ) 
 messRouter.post("/login" , loginByContact)
 messRouter.patch('/update/:id', updateById)
 messRouter.get("/all" , fetchAllMess);

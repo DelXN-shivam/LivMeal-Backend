@@ -4,38 +4,59 @@ import { Subscription } from "../models/Subscription.js";
 
 export const addSubscriptionMess = async (req, res) => {
   try {
-    const { name, price, trialMealPrice, onGoingDiscount, discountOffer, messId } = req.body;
-
-    // Validate required fields
-    // if (!name || !price || !trialMealPrice || !messId || !studentId) {
-    //   return res.status(400).json({ message: "Missing required fields." });
-    // }
-
-    // Create a new subscription
-    const newSubscription = new Subscription({
+    const {
       name,
       price,
-      trialMealPrice,
+      trialMealPrice, // You can still accept this if needed separately
       onGoingDiscount,
       discountOffer,
-      messId
-    });
+      messId,
+      mealType,
+      description
+    } = req.body;
 
-    // Save the subscription to the database
-    await newSubscription.save();
+    // Validate required fields
+    if (!name || !price || !messId || mealType === undefined) {
+      return res.status(400).json({ message: "Missing required fields." });
+    }
 
-    // Optional: update the Mess with this subscription reference (only if needed)
-    await Mess.findByIdAndUpdate(messId, { subscriptionPlans: newSubscription._id });
+    // Create the new embedded subscription plan object
+    const embeddedPlan = {
+      name,
+      price,
+      mealType,
+      onGoingDiscount,
+      discountOffer,
+      description
+    };
+
+    // Update Mess:
+    const updatedMess = await Mess.findByIdAndUpdate(
+      messId,
+      {
+        $push: { subscriptionPlans: embeddedPlan },
+        $set: {
+          subscription: {
+            name,
+            price
+          }
+        }
+      },
+      { new: true }
+    );
 
     res.status(201).json({
-      message: 'Subscription created successfully.',
-      subscription: newSubscription
+      message: 'Subscription plan added successfully.',
+      addedPlan: embeddedPlan,
+      mess: updatedMess
     });
+
   } catch (error) {
-    console.error('Error creating subscription:', error);
+    console.error('Error adding subscription plan:', error);
     res.status(500).json({ message: 'Internal server error.' });
   }
 };
+
 
 
 export const addSubscriptionToStudent = async (req, res) => {

@@ -48,13 +48,15 @@ import mongoose from 'mongoose';
 const subscriptionSchema = new mongoose.Schema({
   name : { 
     type: String,  
+    enum : ["daily" , "weekly" , "monthly" , "trial"],
+    lowercase : true
   },
   price : {
     type: Number,
   },
-  trialMealPrice: {
-    type: Number
-  },
+  // trialMealPrice: {
+  //   type: Number
+  // },
   onGoingDiscount: {
     type: Boolean,
     default: false,
@@ -64,10 +66,17 @@ const subscriptionSchema = new mongoose.Schema({
     default: '',
     trim: true,
   },
+  mealType : {
+    type : Number,
+    enum : [1 , 2]
+  } ,
+  description : {
+    type : String,
+  },
   messId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Mess', 
-    required: true,
+    //required: true,
   },
   studentId: {
     type: mongoose.Schema.Types.ObjectId,
