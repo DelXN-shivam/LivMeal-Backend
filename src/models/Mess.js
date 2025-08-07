@@ -1,3 +1,85 @@
+// // import mongoose from 'mongoose';
+
+// // const messSchema = new mongoose.Schema({
+// //   messName: {
+// //     type: String,
+// //     // required: true,
+// //     trim: true,
+// //   },
+// //   messOwnerName: {
+// //     type: String,
+// //     // required: true,
+// //     trim: true,
+// //   },
+// //   email: {
+// //     type: String,
+// //     // required: true,
+// //     unique: true, // assuming one mess per email
+// //     lowercase: true,
+// //   },
+// //   contact: {
+// //     type: String,
+// //     // required: true,
+// //   },
+// //   messAddress: {
+// //     type: String,
+// //     // required: true,
+// //   },
+// //   mealTypes: {
+// //     type: String,
+// //     enum: ['veg', 'non-veg', 'both'],
+// //     // required: true,
+// //   },
+// //   messTimings: {
+// //     breakfast: {
+// //       from: { type: String },
+// //       to: { type: String },
+// //     },
+// //     lunch: {
+// //       from: { type: String },
+// //       to: { type: String },
+// //     },
+// //     dinner: {
+// //       from: { type: String },
+// //       to: { type: String },
+// //     },
+// //   },
+// //   subscription : {
+// //     name : {
+// //       type : String,
+// //     } , 
+// //     price : {
+// //       type : Number
+// //     }
+// //   },
+// //   deliveryAvailable: {
+// //     type: Boolean,
+// //     default: false,
+// //   },
+// //   serviceRadius: {
+// //     type: Number, // in kilometers
+// //     default: 0,
+// //   },
+// //   subscriptionPlans: [
+// //     {
+// //       type: mongoose.Schema.Types.ObjectId,
+// //       ref: 'Subscription', 
+// //     },
+// //   ],
+// //   photos: [
+// //     {
+// //       type: String
+// //     },
+// //   ],
+// //   isVerified: {
+// //     type: String,
+// //     enum: ['pending', 'verified' , 'rejected'],
+// //     default: "pending"
+// //   }
+// // }, { timestamps: true , strict : true });
+
+// // export default mongoose.model('Mess', messSchema);
+
 // import mongoose from 'mongoose';
 
 // const messSchema = new mongoose.Schema({
@@ -44,14 +126,12 @@
 //       to: { type: String },
 //     },
 //   },
-//   subscription : {
-//     name : {
-//       type : String,
-//     } , 
-//     price : {
-//       type : Number
+//   subscription: [
+//     {
+//       name: { type: String },
+//       price: { type: Number },
 //     }
-//   },
+//   ],
 //   deliveryAvailable: {
 //     type: Boolean,
 //     default: false,
@@ -62,94 +142,127 @@
 //   },
 //   subscriptionPlans: [
 //     {
-//       type: mongoose.Schema.Types.ObjectId,
-//       ref: 'Subscription', 
-//     },
+//       name: { type: String },
+//       price: { type: Number },
+//       mealType: { type: Number },
+//       onGoingDiscount: { type: Boolean, default: false },
+//       discountOffer: { type: Number },
+//       description: { type: String }
+//     }
+//   ],
+//   reviews: [
+//     {
+//       imgUrl: {
+//         type: String
+//       },
+//       name: {
+//         type: String
+//       },
+//       rating: {
+//         type: Number
+//       },
+//       description: {
+//         type: String
+//       },
+//       studentId: {
+//         type: mongoose.Schema.Types.ObjectId,
+//         ref: "student"
+//       },
+//       createdAt: {
+//         type: String
+//       }
+//     }
 //   ],
 //   photos: [
 //     {
 //       type: String
 //     },
 //   ],
+//   bankDetails: {
+//     upiId: {
+//       type: String
+//     },
+//     paymentContact: {
+//       type: Number
+//     }
+//   },
 //   isVerified: {
 //     type: String,
-//     enum: ['pending', 'verified' , 'rejected'],
+//     enum: ['pending', 'verified', 'rejected'],
 //     default: "pending"
 //   }
-// }, { timestamps: true , strict : true });
+// }, { timestamps: true, strict: true });
 
 // export default mongoose.model('Mess', messSchema);
 
+// models/Mess.js
 import mongoose from 'mongoose';
 
-const messSchema = new mongoose.Schema({
-  messName: {
-    type: String,
-    // required: true,
-    trim: true,
+const { Schema } = mongoose;
+
+const messSchema = new Schema({
+  // Basic Info
+  messName: { type: String },
+  ownerName: { type: String },
+  email: { type: String },
+  mobile: { type: String },
+  address: { type: String },
+
+  // Service Details
+  messType: { type: String },
+  deliveryAvailable: { type: Boolean },
+  serviceRadius: { type: Number },
+
+  // Meal Times
+  breakfastTimings: {
+    start: { type: String },
+    end: { type: String }
   },
-  messOwnerName: {
-    type: String,
-    // required: true,
-    trim: true,
+  lunchTimings: {
+    start: { type: String },
+    end: { type: String }
   },
-  email: {
-    type: String,
-    // required: true,
-    unique: true, // assuming one mess per email
-    lowercase: true,
+  dinnerTimings: {
+    start: { type: String },
+    end: { type: String }
   },
-  contact: {
-    type: String,
-    // required: true,
+
+  // Payment Methods
+  upiId: { type: String },
+  paymentPhone: { type: String },
+
+  // Photos
+  photos: [{
+    url: { type: String },
+    publicId: { type: String }
+  }],
+  subscriptionPlans: {
+    type: [
+      {
+        name: { type: String },
+        price: { type: Number },
+        mealType: { type: Number },
+        onGoingDiscount: { type: Boolean, default: false },
+        discountOffer: { type: Number },
+        description: { type: String }
+      }
+    ],
+    default: []
   },
-  messAddress: {
-    type: String,
-    // required: true,
+  subscription: {
+    type: [
+      {
+        name: { type: String },
+        price: { type: Number }
+      }
+    ],
+    default: []
   },
-  mealTypes: {
-    type: String,
-    enum: ['veg', 'non-veg', 'both'],
-    // required: true,
-  },
-  messTimings: {
-    breakfast: {
-      from: { type: String },
-      to: { type: String },
-    },
-    lunch: {
-      from: { type: String },
-      to: { type: String },
-    },
-    dinner: {
-      from: { type: String },
-      to: { type: String },
-    },
-  },
-  subscription: [
-    {
-      name: { type: String },
-      price: { type: Number },
-    }
-  ],
-  deliveryAvailable: {
-    type: Boolean,
-    default: false,
-  },
-  serviceRadius: {
-    type: Number, // in kilometers
-    default: 0,
-  },
-  subscriptionPlans: [
-    {
-      name: { type: String },
-      price: { type: Number },
-      mealType: { type: Number },
-      onGoingDiscount: { type: Boolean, default: false },
-      discountOffer: { type: Number },
-      description: { type: String }
-    }
-  ],
+
+  // Metadata
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+  isVerified: { type: Boolean, default: false },
   reviews: [
     {
       imgUrl: {
@@ -172,25 +285,10 @@ const messSchema = new mongoose.Schema({
         type: String
       }
     }
-  ],
-  photos: [
-    {
-      type: String
-    },
-  ],
-  bankDetails: {
-    upiId: {
-      type: String
-    },
-    paymentContact: {
-      type: Number
-    }
-  },
-  isVerified: {
-    type: String,
-    enum: ['pending', 'verified', 'rejected'],
-    default: "pending"
-  }
-}, { timestamps: true, strict: true });
+  ]
+});
 
-export default mongoose.model('Mess', messSchema);
+// Pre-validation hook removed (no validation needed)
+
+export const Mess = mongoose.model('Mess', messSchema);
+

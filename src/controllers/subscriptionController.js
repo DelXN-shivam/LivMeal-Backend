@@ -1,4 +1,4 @@
-import Mess from "../models/Mess.js";
+import {Mess} from "../models/Mess.js";
 import { Student } from "../models/Student.js";
 import { Subscription } from "../models/Subscription.js";
 
