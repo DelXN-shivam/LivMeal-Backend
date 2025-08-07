@@ -31,16 +31,16 @@ messRouter.post(
 );
 
 // Get all messes
-messRouter.get('/', getAllMesses);
+messRouter.get('/all', getAllMesses);
 
 // Get single mess
 messRouter.get('/:id', getMess);
 
 // Update mess
-messRouter.patch('/:id', updateMess);
+messRouter.patch('/update/:id', updateMess);
 
 // Delete mess
-messRouter.delete('/:id', deleteMess);
+messRouter.delete('/delete/:id', deleteMess);
 
 messRouter.post("/addSubscription", addSubscriptionMess);
 

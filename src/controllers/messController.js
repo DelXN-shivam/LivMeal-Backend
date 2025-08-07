@@ -296,7 +296,7 @@ export const registerMess = async (req, res) => {
 // Get all messes
 export const getAllMesses = async (req, res) => {
   try {
-    const messes = await Mess.find({ isActive: true });
+    const messes = await Mess.find();
     res.status(200).json({
       success: true,
       count: messes.length,
