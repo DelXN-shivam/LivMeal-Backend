@@ -23,15 +23,16 @@ const studentSchema = new mongoose.Schema({
         type : Boolean,
         default: false
     },  
-    subscribedMess : {
+    subscribedMess : [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Mess'   
-    },
-    subscription : {
+    }],
+    subscription : [{
         type: mongoose.Schema.Types.ObjectId,   
         ref: 'Subscription' 
-    },
+    }],
     favorites: [{
+    
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Mess'   
   }]
