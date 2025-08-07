@@ -126,14 +126,12 @@ const messSchema = new mongoose.Schema({
       to: { type: String },
     },
   },
-  subscription: {
-    name: {
-      type: String,
-    },
-    price: {
-      type: Number
+  subscription: [
+    {
+      name: { type: String },
+      price: { type: Number },
     }
-  },
+  ],
   deliveryAvailable: {
     type: Boolean,
     default: false,
@@ -152,16 +150,47 @@ const messSchema = new mongoose.Schema({
       description: { type: String }
     }
   ],
+  reviews: [
+    {
+      imgUrl: {
+        type: String
+      },
+      name: {
+        type: String
+      },
+      rating: {
+        type: Number
+      },
+      description: {
+        type: String
+      },
+      studentId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "student"
+      },
+      createdAt: {
+        type: String
+      }
+    }
+  ],
   photos: [
-  {
-    type: String
+    {
+      type: String
+    },
+  ],
+  bankDetails: {
+    upiId: {
+      type: String
+    },
+    paymentContact: {
+      type: Number
+    }
   },
-],
   isVerified: {
-  type: String,
-  enum: ['pending', 'verified', 'rejected'],
-  default: "pending"
-}
-}, { timestamps: true, strict : true });
+    type: String,
+    enum: ['pending', 'verified', 'rejected'],
+    default: "pending"
+  }
+}, { timestamps: true, strict: true });
 
 export default mongoose.model('Mess', messSchema);

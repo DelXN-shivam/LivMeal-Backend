@@ -7,7 +7,7 @@ export const addSubscriptionMess = async (req, res) => {
     const {
       name,
       price,
-      trialMealPrice, // You can still accept this if needed separately
+      trialMealPrice,
       onGoingDiscount,
       discountOffer,
       messId,
@@ -20,34 +20,57 @@ export const addSubscriptionMess = async (req, res) => {
       return res.status(400).json({ message: "Missing required fields." });
     }
 
-    // Create the new embedded subscription plan object
+    // Create the new embedded subscription plan object for Mess
     const embeddedPlan = {
       name,
       price,
       mealType,
-      onGoingDiscount,
-      discountOffer,
+      onGoingDiscount: onGoingDiscount || false,
+      discountOffer: discountOffer || 0,
       description
     };
 
-    // Update Mess:
+    const subscriptionObj = {
+      name, 
+      price
+    };
+
+    // Create new subscription in Subscription model
+    const newSubscription = new Subscription({
+      name,
+      price,
+      trialMealPrice: trialMealPrice || 0,
+      onGoingDiscount: onGoingDiscount || false,
+      discountOffer: discountOffer || 0,
+      messId
+    });
+
+    // Save the subscription to get the ID
+    const savedSubscription = await newSubscription.save();
+
+    // Update Mess with embedded plan and subscription reference
     const updatedMess = await Mess.findByIdAndUpdate(
       messId,
       {
-        $push: { subscriptionPlans: embeddedPlan },
-        $set: {
-          subscription: {
-            name,
-            price
-          }
+        $push: { 
+          subscriptionPlans: embeddedPlan,
+          subscription: subscriptionObj
         }
       },
       { new: true }
     );
 
+    if (!updatedMess) {
+      // If mess update fails, clean up the created subscription
+      await Subscription.findByIdAndDelete(savedSubscription._id);
+      return res.status(404).json({ message: 'Mess not found.' });
+    }
+
     res.status(201).json({
       message: 'Subscription plan added successfully.',
       addedPlan: embeddedPlan,
+      subscriptionId: savedSubscription._id,
+      subscription: savedSubscription,
       mess: updatedMess
     });
 

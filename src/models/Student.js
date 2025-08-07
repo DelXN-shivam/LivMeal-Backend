@@ -16,6 +16,9 @@ const studentSchema = new mongoose.Schema({
         type : String,
         enum : ['male' , 'female']
     } ,
+    imgUrl : {
+        type : String
+    },
     isRegistered : {
         type : Boolean,
         default: false

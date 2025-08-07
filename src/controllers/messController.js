@@ -161,14 +161,92 @@ export const fetchById = async (req, res) => {
     }
 }
 
-export const addSubscription = async (req, res) => {
-    try {
-        const body = req.body;
+// export const addSubscription = async (req, res) => {
+//     try {
+//         const body = req.body;
 
-    } catch { err } {
-        console.error('Server Error', err);
+//     } catch { err } {
+//         console.error('Server Error', err);
+//         return res.status(500).json({
+//             message: err.message
+//         })
+//     }
+// }
+
+export const addReviews = async (req, res) => {
+    try {
+        const { messId } = req.params; // Extract messId from query parameters
+        const { imgUrl, name, rating, description, studentId , createdAt } = req.body;
+
+        // Validate required fields
+        if (!messId) {
+            return res.status(400).json({
+                success: false,
+                message: "Mess ID is required"
+            });
+        }
+
+        // if (!name || !rating || !description || !studentId) {
+        //     return res.status(400).json({
+        //         success: false,
+        //         message: "Name, rating, description, and studentId are required"
+        //     });
+        // }
+
+        // Validate rating range (assuming 1-5 scale)
+        if (rating < 1 || rating > 5) {
+            return res.status(400).json({
+                success: false,
+                message: "Rating must be between 1 and 5"
+            });
+        }
+
+        // Create review object
+        const newReview = {
+            imgUrl,
+            name,
+            rating,
+            description,
+            studentId,
+            createdAt
+        };
+
+        // Find the mess and add the review to its reviews array
+        const updatedMess = await Mess.findByIdAndUpdate(
+            messId,
+            { 
+                $push: { reviews: newReview } 
+            },
+            { 
+                new: true, // Return the updated document
+                runValidators: true 
+            }
+        );
+
+        if (!updatedMess) {
+            return res.status(404).json({
+                success: false,
+                message: "Mess not found"
+            });
+        }
+
+        // Return success response
+        return res.status(201).json({
+            success: true,
+            message: "Review added successfully",
+            data: {
+                messId: updatedMess._id,
+                reviewCount: updatedMess.reviews.length,
+                newReview: newReview
+            }
+        });
+
+    } catch (error) {
+        console.error("Error adding review:", error);
         return res.status(500).json({
-            message: err.message
-        })
+            success: false,
+            message: "Internal server error",
+            error: error.message
+        });
     }
-}
+};
