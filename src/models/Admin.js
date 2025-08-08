@@ -14,6 +14,14 @@ const adminSchema = new mongoose.Schema({
     } ,
     password : {
         type : String
+    } , 
+    platoformFee : {
+        type : Number,
+        default : 2
+    } ,
+    gst : {
+        type : Number,
+        default : 5
     }
 })
 

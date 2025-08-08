@@ -1,3 +1,4 @@
+import AdminConfig from "../models/AdminConfig.js";
 import { Mess } from "../models/Mess.js";
 import { Student } from "../models/Student.js";
 import { Subscription } from "../models/Subscription.js";
@@ -21,9 +22,13 @@ export const addSubscriptionMess = async (req, res) => {
       return res.status(400).json({ message: "Missing required fields." });
     }
 
-    // Constants for GST and platform fee
-    const GST_PERCENT = 5;
-    const PLATFORM_FEE_PERCENT = 2;
+    const adminConfig = await AdminConfig.findOne();
+    if (!adminConfig) {
+      return res.status(500).json({ message: 'Admin config not found' });
+    }
+
+    const GST_PERCENT = adminConfig.gst;
+    const PLATFORM_FEE_PERCENT = adminConfig.platformFee;
 
     // Calculate final price
     const gstAmount = (price * GST_PERCENT) / 100;
@@ -37,7 +42,7 @@ export const addSubscriptionMess = async (req, res) => {
       mealType,
       onGoingDiscount: onGoingDiscount || false,
       discountOffer: discountOffer || 0,
-      description ,
+      description,
       subscriptionId
     };
 
@@ -60,7 +65,7 @@ export const addSubscriptionMess = async (req, res) => {
     const savedSubscription = await newSubscription.save();
 
     embeddedPlan.subscriptionId = savedSubscription._id;
-    
+
     // Update Mess with embedded plan and subscription reference
     const updatedMess = await Mess.findByIdAndUpdate(
       messId,
