@@ -209,7 +209,7 @@ const messSchema = new Schema({
   address: { type: String },
 
   // Service Details
-  messType: { type: String },
+  messType: { type: String  , enum : ["veg" , "non-veg" , "both"]},
   deliveryAvailable: { type: Boolean },
   serviceRadius: { type: Number },
 
@@ -266,7 +266,11 @@ const messSchema = new Schema({
   // Metadata
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
-  isVerified: { type: Boolean, default: false },
+  isVerified: {
+    type: String,
+    enum: ['pending', 'verified', 'rejected'],
+    default: "pending"
+  },
   reviews: [
     {
       imgUrl: {
