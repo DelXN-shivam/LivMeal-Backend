@@ -1,4 +1,4 @@
-import {Mess} from "../models/Mess.js";
+import { Mess } from "../models/Mess.js";
 import { Student } from "../models/Student.js";
 import { Subscription } from "../models/Subscription.js";
 
@@ -12,7 +12,8 @@ export const addSubscriptionMess = async (req, res) => {
       discountOffer,
       messId,
       mealType,
-      description
+      description,
+      subscriptionId
     } = req.body;
 
     // Validate required fields
@@ -20,25 +21,35 @@ export const addSubscriptionMess = async (req, res) => {
       return res.status(400).json({ message: "Missing required fields." });
     }
 
+    // Constants for GST and platform fee
+    const GST_PERCENT = 5;
+    const PLATFORM_FEE_PERCENT = 2;
+
+    // Calculate final price
+    const gstAmount = (price * GST_PERCENT) / 100;
+    const platformFee = (price * PLATFORM_FEE_PERCENT) / 100;
+    const finalPrice = Math.round(price + gstAmount + platformFee); // you can keep decimal if needed
+
     // Create the new embedded subscription plan object for Mess
     const embeddedPlan = {
       name,
-      price,
+      price: finalPrice,
       mealType,
       onGoingDiscount: onGoingDiscount || false,
       discountOffer: discountOffer || 0,
-      description
+      description ,
+      subscriptionId
     };
 
     const subscriptionObj = {
-      name, 
-      price
+      name,
+      price: finalPrice
     };
 
     // Create new subscription in Subscription model
     const newSubscription = new Subscription({
       name,
-      price,
+      price: finalPrice,
       trialMealPrice: trialMealPrice || 0,
       onGoingDiscount: onGoingDiscount || false,
       discountOffer: discountOffer || 0,
@@ -48,11 +59,13 @@ export const addSubscriptionMess = async (req, res) => {
     // Save the subscription to get the ID
     const savedSubscription = await newSubscription.save();
 
+    embeddedPlan.subscriptionId = savedSubscription._id;
+    
     // Update Mess with embedded plan and subscription reference
     const updatedMess = await Mess.findByIdAndUpdate(
       messId,
       {
-        $push: { 
+        $push: {
           subscriptionPlans: embeddedPlan,
           subscription: subscriptionObj
         }
@@ -68,7 +81,6 @@ export const addSubscriptionMess = async (req, res) => {
 
     res.status(201).json({
       message: 'Subscription plan added successfully.',
-      addedPlan: embeddedPlan,
       subscriptionId: savedSubscription._id,
       subscription: savedSubscription,
       mess: updatedMess
@@ -84,7 +96,7 @@ export const addSubscriptionMess = async (req, res) => {
 
 export const addSubscriptionToStudent = async (req, res) => {
   try {
-    const { studentId, subscriptionId , messId} = req.body;
+    const { studentId, subscriptionId, messId } = req.body;
 
     // // Validate required fields
     // if (!studentId || !subscriptionId) {
@@ -94,8 +106,10 @@ export const addSubscriptionToStudent = async (req, res) => {
     // Find the student and update their subscription
     const updatedStudent = await Student.findByIdAndUpdate(
       studentId,
-      { subscribedMess : messId,
-        subscription: subscriptionId },
+      {
+        subscribedMess: messId,
+        subscription: subscriptionId
+      },
       { new: true }
     ).populate('subscription');
 

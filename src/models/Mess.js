@@ -244,7 +244,11 @@ const messSchema = new Schema({
         mealType: { type: Number },
         onGoingDiscount: { type: Boolean, default: false },
         discountOffer: { type: Number },
-        description: { type: String }
+        description: { type: String },
+        subscriptionId : {
+          type :  mongoose.Schema.Types.ObjectId,
+          ref : 'Subscription'
+        }
       }
     ],
     default: []
