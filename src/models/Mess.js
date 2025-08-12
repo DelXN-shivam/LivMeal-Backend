@@ -209,7 +209,7 @@ const messSchema = new Schema({
   address: { type: String },
 
   // Service Details
-  messType: { type: String  , enum : ["veg" , "non-veg" , "both"]},
+  messType: { type: String, enum: ["veg", "non-veg", "both"] },
   deliveryAvailable: { type: Boolean },
   serviceRadius: { type: Number },
 
@@ -232,10 +232,9 @@ const messSchema = new Schema({
   paymentPhone: { type: String },
 
   // Photos
-  photos: [{
-    url: { type: String },
-    publicId: { type: String }
-  }],
+  photos: {
+    type: [String]
+  },
   subscriptionPlans: {
     type: [
       {
@@ -245,13 +244,16 @@ const messSchema = new Schema({
         onGoingDiscount: { type: Boolean, default: false },
         discountOffer: { type: Number },
         description: { type: String },
-        subscriptionId : {
-          type :  mongoose.Schema.Types.ObjectId,
-          ref : 'Subscription'
+        subscriptionId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Subscription'
         }
       }
     ],
     default: []
+  },
+  documents: {
+    type: [String]
   },
   subscription: {
     type: [
@@ -271,6 +273,10 @@ const messSchema = new Schema({
     enum: ['pending', 'verified', 'rejected'],
     default: "pending"
   },
+  messMenu: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'MessMenu'
+  }],
   reviews: [
     {
       imgUrl: {
