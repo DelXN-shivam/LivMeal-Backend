@@ -1,8 +1,8 @@
 APi Structure : 
 
-BASE_URL : http://localhost:3500/api/v1
+VercelUrl : https://liv-meal-backend.vercel.app
 
-1. Mess API : http://localhost:3500/api/v1/mess
+1. Mess API : {{VercelUrl}}/api/v1/mess/register ,  method : POST
     i) Register : /register
         sampleBody : {
   "messName": "Green Leaf Tiffin",
@@ -45,12 +45,224 @@ BASE_URL : http://localhost:3500/api/v1
 
     ii) Login by contact : /login/?contact=9876543210
 
-    iii) update by id : /update/id
-                    eg : /update/688876e74eff51e88126a9b6
+    iii) update by id : {{VercelUrl}}/api/v1/mess/update/689b271d7549e79db2b9ec61   method : PATCH
+                    
 
       req.body : Data to be updated 
 
-    iv) fetch all messes : /all
+    iv) fetch all messes : {{VercelUrl}}/api/v1/mess/all  method : GET 
+     response body : {
+    "success": true,
+    "count": 2,
+    "data": [
+        {
+            "breakfastTimings": {
+                "start": "07:00",
+                "end": "09:00"
+            },
+            "lunchTimings": {
+                "start": "12:00",
+                "end": "14:00"
+            },
+            "dinnerTimings": {
+                "start": "19:00",
+                "end": "21:00"
+            },
+            "_id": "6899830c5d82e6053c98ca16",
+            "messName": "Shree Krishna Mess",
+            "ownerName": "Ramesh Kumar",
+            "email": "ramesh@shreekrishnamess.com",
+            "mobile": "9876543210",
+            "address": "123 MG Road, Near City Mall, Bangalore",
+            "messType": "both",
+            "deliveryAvailable": true,
+            "serviceRadius": 5,
+            "upiId": "ramesh@upi",
+            "paymentPhone": "9876543210",
+            "isVerified": "pending",
+            "photos": [
+                "https://res.cloudinary.com/dh1sgsaf5/image/upload/v1754299628/products/exatsdqwf9cexorp7ra2.jpg",
+                "https://res.cloudinary.com/dh1sgsaf5/image/upload/v1753785113/products/lqreazb778im6arutmcr.jpg",
+                "https://res.cloudinary.com/dh1sgsaf5/image/upload/v1753778830/products/gxnkoxkrgoepo4iihlak.jpg",
+                "https://res.cloudinary.com/dh1sgsaf5/image/upload/v1753775065/products/qris6i4wvkdwan68zsvn.jpg",
+                "https://res.cloudinary.com/dh1sgsaf5/image/upload/v1753774874/products/q4hvkgadrhczkwhtheej.jpg"
+            ],
+            "subscriptionPlans": [
+                {
+                    "name": "weekly",
+                    "price": 770,
+                    "mealType": 2,
+                    "onGoingDiscount": true,
+                    "discountOffer": 10,
+                    "description": "sasadsadasdd",
+                    "subscriptionId": "6899834d5d82e6053c98ca1b",
+                    "_id": "6899834d5d82e6053c98ca1e"
+                },
+                {
+                    "name": "monthly",
+                    "price": 2750,
+                    "mealType": 2,
+                    "onGoingDiscount": true,
+                    "discountOffer": 10,
+                    "description": "tasty meals",
+                    "subscriptionId": "689983615d82e6053c98ca23",
+                    "_id": "689983615d82e6053c98ca26"
+                }
+            ],
+            "subscription": [
+                {
+                    "name": "weekly",
+                    "price": 770,
+                    "_id": "6899834d5d82e6053c98ca1d"
+                },
+                {
+                    "name": "monthly",
+                    "price": 2750,
+                    "_id": "689983615d82e6053c98ca25"
+                }
+            ],
+            "createdAt": "2025-08-11T05:43:40.768Z",
+            "updatedAt": "2025-08-11T05:43:40.768Z",
+            "reviews": [
+                {
+                    "imgUrl": "https://res-console.cloudinary.com/dijjftmm8/thumbnails/v1/image/upload/v1752653489/aGVyby1zZWN0aW9uL2prNmRzYjZnYXM4a3IyazRsaWdh/drilldown",
+                    "name": "Shounak Joshi",
+                    "rating": 3,
+                    "description": "excellet food quality",
+                    "studentId": "6893354d0eee942866aa9816",
+                    "createdAt": "1969-07-20 20:18:04Z",
+                    "_id": "689983875d82e6053c98ca2c"
+                },
+                {
+                    "imgUrl": "https://res-console.cloudinary.com/dijjftmm8/thumbnails/v1/image/upload/v1752653489/aGVyby1zZWN0aW9uL2prNmRzYjZnYXM4a3IyazRsaWdh/drilldown",
+                    "name": "Shivam Khule",
+                    "rating": 2,
+                    "description": "no cleanliness",
+                    "studentId": "6894483a1d4669d4bcb9c8f7",
+                    "createdAt": "1969-07-20 20:18:04Z",
+                    "_id": "689983a75d82e6053c98ca33"
+                }
+            ],
+            "__v": 0,
+            "documents": [
+                "https://res.cloudinary.com/dh1sgsaf5/image/upload/v1753773770/products/j3cxnoyrssuumpaphvri.jpg",
+                "https://res.cloudinary.com/dh1sgsaf5/image/upload/v1753774489/products/mzefgj41dvc3vfyfn47m.jpg",
+                "https://res.cloudinary.com/dh1sgsaf5/image/upload/v1753774642/products/fb4gfojdzysm7cfy3x75.jpg",
+                "https://res.cloudinary.com/dh1sgsaf5/image/upload/v1753774874/products/q4hvkgadrhczkwhtheej.jpg"
+            ],
+            "messMenu": [
+                "689ad7724dc83532bd0389fb",
+                "689ad7894dc83532bd038a21"
+            ]
+        },
+        {
+            "breakfastTimings": {
+                "start": "07:30",
+                "end": "09:30"
+            },
+            "lunchTimings": {
+                "start": "12:00",
+                "end": "14:00"
+            },
+            "dinnerTimings": {
+                "start": "19:00",
+                "end": "21:00"
+            },
+            "_id": "689b271d7549e79db2b9ec61",
+            "messName": "Annapurna Veg Mess",
+            "ownerName": "Sita Devi",
+            "email": "annapurna@vegmess.in",
+            "mobile": "9123456789",
+            "address": "45 Laxmi Nagar, Hyderabad",
+            "messType": "veg",
+            "deliveryAvailable": true,
+            "serviceRadius": 4,
+            "paymentPhone": "9123456789",
+            "photos": [
+                "https://res.cloudinary.com/dh1sgsaf5/image/upload/v1753774642/products/fb4gfojdzysm7cfy3x75.jpg",
+                "https://res.cloudinary.com/dh1sgsaf5/image/upload/v1753773770/products/j3cxnoyrssuumpaphvri.jpg",
+                "https://res.cloudinary.com/dh1sgsaf5/image/upload/v1753778830/products/gxnkoxkrgoepo4iihlak.jpg",
+                "https://res.cloudinary.com/dh1sgsaf5/image/upload/v1753780731/products/sxh8p0krborjqw91qp4i.jpg",
+                "https://res.cloudinary.com/dh1sgsaf5/image/upload/v1753784888/products/yzfdv9hxn1dcfosspptq.jpg"
+            ],
+            "documents": [
+                "https://res.cloudinary.com/dh1sgsaf5/image/upload/v1753774642/products/fb4gfojdzysm7cfy3x75.jpg",
+                "https://res.cloudinary.com/dh1sgsaf5/image/upload/v1753773770/products/j3cxnoyrssuumpaphvri.jpg",
+                "https://res.cloudinary.com/dh1sgsaf5/image/upload/v1753778830/products/gxnkoxkrgoepo4iihlak.jpg",
+                "https://res.cloudinary.com/dh1sgsaf5/image/upload/v1753780731/products/sxh8p0krborjqw91qp4i.jpg",
+                "https://res.cloudinary.com/dh1sgsaf5/image/upload/v1753784888/products/yzfdv9hxn1dcfosspptq.jpg"
+            ],
+            "isVerified": "pending",
+            "messMenu": [
+                "689b2911af4b1b78144fb6de"
+            ],
+            "subscriptionPlans": [
+                {
+                    "name": "weekly",
+                    "price": 770,
+                    "mealType": 2,
+                    "onGoingDiscount": true,
+                    "discountOffer": 20,
+                    "description": "Best in the business",
+                    "subscriptionId": "689b27d846527434d5fae9d4",
+                    "_id": "689b27d846527434d5fae9d8"
+                },
+                {
+                    "name": "daily",
+                    "price": 55,
+                    "mealType": 1,
+                    "onGoingDiscount": true,
+                    "discountOffer": 20,
+                    "description": "Best in the business",
+                    "subscriptionId": "689b27eecd0395c24d601fc1",
+                    "_id": "689b27efcd0395c24d601fc5"
+                },
+                {
+                    "name": "monthly",
+                    "price": 2640,
+                    "mealType": 2,
+                    "onGoingDiscount": true,
+                    "discountOffer": 20,
+                    "description": "Best in the business",
+                    "subscriptionId": "689b2805cd0395c24d601fcc",
+                    "_id": "689b2805cd0395c24d601fcf"
+                }
+            ],
+            "subscription": [
+                {
+                    "name": "weekly",
+                    "price": 770,
+                    "_id": "689b27d846527434d5fae9d7"
+                },
+                {
+                    "name": "daily",
+                    "price": 55,
+                    "_id": "689b27efcd0395c24d601fc4"
+                },
+                {
+                    "name": "monthly",
+                    "price": 2640,
+                    "_id": "689b2805cd0395c24d601fce"
+                }
+            ],
+            "createdAt": "2025-08-12T11:35:57.457Z",
+            "updatedAt": "2025-08-12T11:35:57.457Z",
+            "reviews": [
+                {
+                    "imgUrl": "https://res-console.cloudinary.com/dijjftmm8/thumbnails/v1/image/upload/v1752653489/aGVyby1zZWN0aW9uL2prNmRzYjZnYXM4a3IyazRsaWdh/drilldown",
+                    "name": "Shivam Khule",
+                    "rating": 4,
+                    "description": "excellent food quality",
+                    "studentId": "6894483a1d4669d4bcb9c8f7",
+                    "createdAt": "1969-07-20 20:18:04Z",
+                    "_id": "689b289ccd0395c24d601fe5"
+                }
+            ],
+            "__v": 0
+        }
+    ]
+}
+
 
     v) fetch by id : /:id
       eg : /mess/688876e74eff51e88126a9b6

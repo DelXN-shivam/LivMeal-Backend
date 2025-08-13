@@ -17,7 +17,7 @@
 
 // routes/messRoutes.js
 import express from 'express';
-import { registerMess, getAllMesses, getMess, updateMess, deleteMess, addReviews } from '../controllers/messController.js';
+import { registerMess, getAllMesses, getMess, updateMess, deleteMess, addReviews, loginByContact } from '../controllers/messController.js';
 import upload from '../middleware/upload.js';
 import { addSubscriptionMess } from '../controllers/subscriptionController.js';
 
@@ -39,6 +39,7 @@ messRouter.get('/:id', getMess);
 // Update mess
 messRouter.patch('/update/:id', updateMess);
 
+messRouter.post('/login-by-contact' , loginByContact)
 // Delete mess
 messRouter.delete('/delete/:id', deleteMess);
 

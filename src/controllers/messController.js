@@ -51,141 +51,9 @@ import {Mess} from '../models/Mess.js';
 // };
 
 
-// export const fetchAllMess = async (req, res) => {
-//     try {
-//         const allMesses = await Mess.find();
 
-//         if (!allMesses) {
-//             return res.status(411).json({
-//                 message: "No messes found"
-//             })
-//         }
 
-//         return res.status(200).json({
-//             message: "Messes found",
-//             data: allMesses
-//         })
-//     } catch (err) {
-//         console.error('Server Error', err);
-//         return res.status(500).json({
-//             message: err.message
-//         })
-//     }
-// }
 
-// export const fetchById = async (req, res) => {
-//     try {
-//         const { id } = req.params;
-
-//         const mess = await Mess.findById(id);
-//         if (!mess) {
-//             return res.status(411).json({
-//                 message: "Mess not found"
-//             })
-//         }
-
-//         return res.status(200).json({
-//             message: "Mess found",
-//             data: mess
-//         })
-
-//     } catch { err } {
-//         console.error('Server Error', err);
-//         return res.status(500).json({
-//             message: err.message
-//         })
-//     }
-// }
-
-// // export const addSubscription = async (req, res) => {
-// //     try {
-// //         const body = req.body;
-
-// //     } catch { err } {
-// //         console.error('Server Error', err);
-// //         return res.status(500).json({
-// //             message: err.message
-// //         })
-// //     }
-// // }
-
-// export const addReviews = async (req, res) => {
-//     try {
-//         const { messId } = req.params; // Extract messId from query parameters
-//         const { imgUrl, name, rating, description, studentId , createdAt } = req.body;
-
-//         // Validate required fields
-//         if (!messId) {
-//             return res.status(400).json({
-//                 success: false,
-//                 message: "Mess ID is required"
-//             });
-//         }
-
-//         // if (!name || !rating || !description || !studentId) {
-//         //     return res.status(400).json({
-//         //         success: false,
-//         //         message: "Name, rating, description, and studentId are required"
-//         //     });
-//         // }
-
-//         // Validate rating range (assuming 1-5 scale)
-//         if (rating < 1 || rating > 5) {
-//             return res.status(400).json({
-//                 success: false,
-//                 message: "Rating must be between 1 and 5"
-//             });
-//         }
-
-//         // Create review object
-//         const newReview = {
-//             imgUrl,
-//             name,
-//             rating,
-//             description,
-//             studentId,
-//             createdAt
-//         };
-
-//         // Find the mess and add the review to its reviews array
-//         const updatedMess = await Mess.findByIdAndUpdate(
-//             messId,
-//             { 
-//                 $push: { reviews: newReview } 
-//             },
-//             { 
-//                 new: true, // Return the updated document
-//                 runValidators: true 
-//             }
-//         );
-
-//         if (!updatedMess) {
-//             return res.status(404).json({
-//                 success: false,
-//                 message: "Mess not found"
-//             });
-//         }
-
-//         // Return success response
-//         return res.status(201).json({
-//             success: true,
-//             message: "Review added successfully",
-//             data: {
-//                 messId: updatedMess._id,
-//                 reviewCount: updatedMess.reviews.length,
-//                 newReview: newReview
-//             }
-//         });
-
-//     } catch (error) {
-//         console.error("Error adding review:", error);
-//         return res.status(500).json({
-//             success: false,
-//             message: "Internal server error",
-//             error: error.message
-//         });
-//     }
-// };
 
 // Register a new mess
 export const registerMess = async (req, res) => {
@@ -333,6 +201,42 @@ export const getMess = async (req, res) => {
     });
   }
 };
+
+export const loginByContact = async (req, res) => {
+  try {
+    const { mobile } = req.body;
+
+    if (!mobile) {
+      return res.status(400).json({
+        success: false,
+        message: "Mobile number is required",
+      });
+    }
+
+    // Find mess by mobile
+    const mess = await Mess.findOne({ mobile });
+    if (!mess) {
+      return res.status(404).json({
+        success: false,
+        message: "No mess found with this mobile number",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Login successful",
+      mess,
+    });
+  } catch (error) {
+    console.error("Error logging in by contact:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message,
+    });
+  }
+};
+
 
 // Update mess
 export const updateMess = async (req, res) => {
