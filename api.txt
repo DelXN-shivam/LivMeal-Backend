@@ -726,3 +726,12 @@ VercelUrl : https://liv-meal-backend.vercel.app
     "favorites": [],
     "__v": 0
 }
+
+  v) add subscription to student : {{VercelUrl}}/api/v1/student/addSubscription , method : PATCH 
+    request body : {
+  "studentId": "689c813d7e97bc96746628bb",
+  "subscriptionId": ["6899830c5d82e6053c98ca16"],
+  "messId": ["6899834d5d82e6053c98ca1b"]
+}
+
+  reponse body : 

@@ -19,7 +19,7 @@ export const studentRegister = async (req, res) => {
         }
 
         const newStudent = await Student.create({
-            name, email, contact, gender , isRegistered: true
+            name, email, contact, gender, isRegistered: true
         })
 
         return res.status(200).json({
@@ -71,77 +71,79 @@ export const studentRegister = async (req, res) => {
 // }
 
 
-export const loginByContact = async (req , res) => {
+export const loginByContact = async (req, res) => {
     try {
         const contact = req.query.contact;
 
-        if(!contact){
+        if (!contact) {
             return res.json({
-                message : "please provide contact"
+                message: "please provide contact"
             })
         }
 
-        const existingStudent = await Student.findOne({contact});
-        if(!existingStudent){
+        const existingStudent = await Student.findOne({ contact });
+        if (!existingStudent) {
             return res.status(409).json({
-                message : "Student does not exist for the given contact"
+                message: "Student does not exist for the given contact"
             })
         }
 
         return res.status(200).json({
-            message : "Student found , Login successfull",
-            data : existingStudent
+            message: "Student found , Login successfull",
+            data: existingStudent
         })
 
 
-    } catch(err){
+    } catch (err) {
         console.error(err);
         return res.status(500).json({
-            message : "Error during login by phone number",
-            error : err.message
+            message: "Error during login by phone number",
+            error: err.message
         })
     }
 }
 
 
 
-export const updateById =  async (req, res) => {
-  const { id } = req.params;
-  const updateFields = req.body;
+export const updateById = async (req, res) => {
+    const { id } = req.params;
+    const updateFields = req.body;
 
-  // Filter out empty string or undefined fields
-  const sanitizedFields = {};
-  Object.entries(updateFields).forEach(([key, value]) => {
-    if (
-      value !== undefined &&
-      value !== '' &&
-      !(typeof value === 'object' && Object.keys(value).length === 0)
-    ) {
-      sanitizedFields[key] = value;
-    }
-  });
-
-  try {
-    const updatedStudent = await Student.findByIdAndUpdate(id, { $set: sanitizedFields }, { new: true });
-
-    if (!updatedStudent) {
-      return res.status(404).json({ message: 'Student not found' });
-    }
-
-    res.status(200).json(updatedStudent);
-  } catch (error) {
-    console.error('Error updating Student:', error);
-    res.status(500).json({ message: 'Server error' ,
-        error : error.message
+    // Filter out empty string or undefined fields
+    const sanitizedFields = {};
+    Object.entries(updateFields).forEach(([key, value]) => {
+        if (
+            value !== undefined &&
+            value !== '' &&
+            !(typeof value === 'object' && Object.keys(value).length === 0)
+        ) {
+            sanitizedFields[key] = value;
+        }
     });
-  }
+
+    try {
+        const updatedStudent = await Student.findByIdAndUpdate(id, { $set: sanitizedFields }, { new: true });
+
+        if (!updatedStudent) {
+            return res.status(404).json({ message: 'Student not found' });
+        }
+
+        res.status(200).json(updatedStudent);
+    } catch (error) {
+        console.error('Error updating Student:', error);
+        res.status(500).json({
+            message: 'Server error',
+            error: error.message
+        });
+    }
 };
 
 export const getStudentById = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const student = await Student.findById(id).populate('favorites');
+        const student = await Student.findById(id).populate('favorites').populate("subscribedMess")
+            .populate("subscription");;
 
         if (!student) {
             return res.status(404).json({
