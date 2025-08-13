@@ -103,41 +103,45 @@ export const addSubscriptionToStudent = async (req, res) => {
   try {
     const { studentId, subscriptionId, messId } = req.body;
 
-    // // Validate required fields
-    // if (!studentId || !subscriptionId) {
-    //   return res.status(400).json({ message: "Missing required fields." });
-    // }
+    if (!studentId || !subscriptionId || !messId) {
+      return res.status(400).json({
+        success: false,
+        message: "studentId, subscriptionId, and messId are required",
+      });
+    }
 
-    // Find the student and update their subscription
     const updatedStudent = await Student.findByIdAndUpdate(
       studentId,
       {
-        subscribedMess: messId,
-        subscription: subscriptionId
+        $push: {
+          subscribedMess: { $each: messId },
+          subscription: { $each: subscriptionId }
+        }
       },
       { new: true }
-    ).populate('subscription');
+    )
+      .populate("subscribedMess")
+      .populate("subscription");
 
     if (!updatedStudent) {
-      return res.status(404).json({ message: "Student not found." });
+      return res.status(404).json({
+        success: false,
+        message: "Student not found"
+      });
     }
-
-    const updateSubscription = await Subscription.findByIdAndUpdate(
-      subscriptionId,
-      { studentId: studentId },
-      { new: true }
-    );
-    if (!updateSubscription) {
-      return res.status(404).json({ message: "Subscription not found." });
-    }
-
 
     res.status(200).json({
-      message: 'Subscription added to student successfully.Student added to subscription successfully.',
-      student: updatedStudent
+      success: true,
+      message: "Subscription and mess added successfully",
+      data: updatedStudent
     });
+
   } catch (error) {
-    console.error('Error adding subscription to student:', error);
-    res.status(500).json({ message: 'Internal server error.' });
+    console.error("Error adding subscription:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message
+    });
   }
-}
+};
