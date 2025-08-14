@@ -1,7 +1,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import {Mess} from '../models/Mess.js';
+import { Mess } from '../models/Mess.js';
 
 
 // export const updateById = async (req, res) => {
@@ -59,8 +59,8 @@ import {Mess} from '../models/Mess.js';
 export const registerMess = async (req, res) => {
   try {
     const requiredFields = [
-      'messName', 'ownerName', 'email', 'mobile', 'address',
-      'messType', 'deliveryAvailable'
+      "messName", "ownerName", "email", "mobile", "address",
+      "messType", "deliveryAvailable"
     ];
 
     for (const field of requiredFields) {
@@ -75,17 +75,18 @@ export const registerMess = async (req, res) => {
     if (!req.body.upiId && !req.body.paymentPhone) {
       return res.status(400).json({
         success: false,
-        message: 'Either UPI ID or Payment Phone is required'
+        message: "Either UPI ID or Payment Phone is required"
       });
     }
 
     if (req.body.deliveryAvailable === true && !req.body.serviceRadius) {
       return res.status(400).json({
         success: false,
-        message: 'Service radius is required when delivery is available'
+        message: "Service radius is required when delivery is available"
       });
     }
 
+    // Prepare mess data
     const newMess = {
       messName: req.body.messName,
       ownerName: req.body.ownerName,
@@ -96,7 +97,9 @@ export const registerMess = async (req, res) => {
       deliveryAvailable: req.body.deliveryAvailable,
       serviceRadius: req.body.serviceRadius,
       upiId: req.body.upiId,
-      paymentPhone: req.body.paymentPhone
+      paymentPhone: req.body.paymentPhone,
+      photos: Array.isArray(req.body.photos) ? req.body.photos : [],
+      documents: Array.isArray(req.body.documents) ? req.body.documents : []
     };
 
     // Add meal timings if provided
@@ -119,47 +122,37 @@ export const registerMess = async (req, res) => {
       };
     }
 
-    // Skip cloudinary logic, but optionally clean uploaded files from disk
-    if (req.files && req.files.length > 0) {
-      for (const file of req.files) {
-        try {
-          fs.unlinkSync(file.path); // just delete uploaded file (no cloudinary upload)
-        } catch (err) {
-          console.error('Error deleting file:', err);
-        }
-      }
-    }
-
     const mess = await Mess.create(newMess);
     res.status(201).json({
       success: true,
       data: mess,
-      message: 'Mess registered successfully'
+      message: "Mess registered successfully"
     });
 
   } catch (error) {
-    console.error('Error registering mess:', error);
-    if (error.name === 'ValidationError') {
+    console.error("Error registering mess:", error);
+    if (error.name === "ValidationError") {
       const messages = Object.values(error.errors).map(val => val.message);
       return res.status(400).json({
         success: false,
-        message: 'Validation error',
+        message: "Validation error",
         errors: messages
       });
     }
     if (error.code === 11000) {
       return res.status(400).json({
         success: false,
-        message: 'Email already registered'
+        message: "Email already registered"
       });
     }
     res.status(500).json({
       success: false,
-      message: 'Server error',
+      message: "Server error",
       error: error.message
     });
   }
 };
+
 
 // Get all messes
 export const getAllMesses = async (req, res) => {
@@ -301,79 +294,79 @@ export const deleteMess = async (req, res) => {
 
 
 export const addReviews = async (req, res) => {
-    try {
-        const { messId } = req.params; // Extract messId from query parameters
-        const { imgUrl, name, rating, description, studentId , createdAt } = req.body;
+  try {
+    const { messId } = req.params; // Extract messId from query parameters
+    const { imgUrl, name, rating, description, studentId, createdAt } = req.body;
 
-        // Validate required fields
-        if (!messId) {
-            return res.status(400).json({
-                success: false,
-                message: "Mess ID is required"
-            });
-        }
-
-        // if (!name || !rating || !description || !studentId) {
-        //     return res.status(400).json({
-        //         success: false,
-        //         message: "Name, rating, description, and studentId are required"
-        //     });
-        // }
-
-        // Validate rating range (assuming 1-5 scale)
-        if (rating < 1 || rating > 5) {
-            return res.status(400).json({
-                success: false,
-                message: "Rating must be between 1 and 5"
-            });
-        }
-
-        // Create review object
-        const newReview = {
-            imgUrl,
-            name,
-            rating,
-            description,
-            studentId,
-            createdAt
-        };
-
-        // Find the mess and add the review to its reviews array
-        const updatedMess = await Mess.findByIdAndUpdate(
-            messId,
-            { 
-                $push: { reviews: newReview } 
-            },
-            { 
-                new: true, // Return the updated document
-                runValidators: true 
-            }
-        );
-
-        if (!updatedMess) {
-            return res.status(404).json({
-                success: false,
-                message: "Mess not found"
-            });
-        }
-
-        // Return success response
-        return res.status(201).json({
-            success: true,
-            message: "Review added successfully",
-            data: {
-                messId: updatedMess._id,
-                reviewCount: updatedMess.reviews.length,
-                newReview: newReview
-            }
-        });
-
-    } catch (error) {
-        console.error("Error adding review:", error);
-        return res.status(500).json({
-            success: false,
-            message: "Internal server error",
-            error: error.message
-        });
+    // Validate required fields
+    if (!messId) {
+      return res.status(400).json({
+        success: false,
+        message: "Mess ID is required"
+      });
     }
+
+    // if (!name || !rating || !description || !studentId) {
+    //     return res.status(400).json({
+    //         success: false,
+    //         message: "Name, rating, description, and studentId are required"
+    //     });
+    // }
+
+    // Validate rating range (assuming 1-5 scale)
+    if (rating < 1 || rating > 5) {
+      return res.status(400).json({
+        success: false,
+        message: "Rating must be between 1 and 5"
+      });
+    }
+
+    // Create review object
+    const newReview = {
+      imgUrl,
+      name,
+      rating,
+      description,
+      studentId,
+      createdAt
+    };
+
+    // Find the mess and add the review to its reviews array
+    const updatedMess = await Mess.findByIdAndUpdate(
+      messId,
+      {
+        $push: { reviews: newReview }
+      },
+      {
+        new: true, // Return the updated document
+        runValidators: true
+      }
+    );
+
+    if (!updatedMess) {
+      return res.status(404).json({
+        success: false,
+        message: "Mess not found"
+      });
+    }
+
+    // Return success response
+    return res.status(201).json({
+      success: true,
+      message: "Review added successfully",
+      data: {
+        messId: updatedMess._id,
+        reviewCount: updatedMess.reviews.length,
+        newReview: newReview
+      }
+    });
+
+  } catch (error) {
+    console.error("Error adding review:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message
+    });
+  }
 };
