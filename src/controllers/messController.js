@@ -65,7 +65,7 @@ export const registerMess = async (req, res) => {
       "mobile",
       "address",
       "messType",
-      "deliveryAvailable",
+      // "deliveryAvailable",
     ];
 
     for (const field of requiredFields) {
