@@ -216,15 +216,15 @@ const messSchema = new Schema({
   // Meal Times
   breakfastTimings: {
     start: { type: String },
-    end: { type: String }
+    end: { type: String },
   },
   lunchTimings: {
     start: { type: String },
-    end: { type: String }
+    end: { type: String },
   },
   dinnerTimings: {
     start: { type: String },
-    end: { type: String }
+    end: { type: String },
   },
 
   // Payment Methods
@@ -233,7 +233,8 @@ const messSchema = new Schema({
 
   // Photos
   photos: {
-    type: [String]
+    type: [String],
+    default: [],
   },
   subscriptionPlans: {
     type: [
@@ -246,23 +247,23 @@ const messSchema = new Schema({
         description: { type: String },
         subscriptionId: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: 'Subscription'
-        }
-      }
+          ref: "Subscription",
+        },
+      },
     ],
-    default: []
+    default: [],
   },
   documents: {
-    type: [String]
+    type: [String],
   },
   subscription: {
     type: [
       {
         name: { type: String },
-        price: { type: Number }
-      }
+        price: { type: Number },
+      },
     ],
-    default: []
+    default: [],
   },
 
   // Metadata
@@ -270,36 +271,38 @@ const messSchema = new Schema({
   updatedAt: { type: Date, default: Date.now },
   isVerified: {
     type: String,
-    enum: ['pending', 'verified', 'rejected'],
-    default: "pending"
+    enum: ["pending", "verified", "rejected"],
+    default: "pending",
   },
-  messMenu: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'MessMenu'
-  }],
+  messMenu: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "MessMenu",
+    },
+  ],
   reviews: [
     {
       imgUrl: {
-        type: String
+        type: String,
       },
       name: {
-        type: String
+        type: String,
       },
       rating: {
-        type: Number
+        type: Number,
       },
       description: {
-        type: String
+        type: String,
       },
       studentId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "student"
+        ref: "student",
       },
       createdAt: {
-        type: String
-      }
-    }
-  ]
+        type: String,
+      },
+    },
+  ],
 });
 
 // Pre-validation hook removed (no validation needed)

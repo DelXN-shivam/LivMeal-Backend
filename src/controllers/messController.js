@@ -59,30 +59,43 @@ import { Mess } from '../models/Mess.js';
 export const registerMess = async (req, res) => {
   try {
     const requiredFields = [
-      "messName", "ownerName", "email", "mobile", "address",
-      "messType", "deliveryAvailable"
+      "messName",
+      "ownerName",
+      "email",
+      "mobile",
+      "address",
+      "messType",
+      "deliveryAvailable",
     ];
 
     for (const field of requiredFields) {
       if (!req.body[field]) {
         return res.status(400).json({
           success: false,
-          message: `${field} is required`
+          message: `${field} is required`,
         });
       }
+    }
+
+    // Specifically check deliveryAvailable (boolean field)
+    if (typeof req.body.deliveryAvailable !== "boolean") {
+      return res.status(400).json({
+        success: false,
+        message: "deliveryAvailable must be a boolean value",
+      });
     }
 
     if (!req.body.upiId && !req.body.paymentPhone) {
       return res.status(400).json({
         success: false,
-        message: "Either UPI ID or Payment Phone is required"
+        message: "Either UPI ID or Payment Phone is required",
       });
     }
 
     if (req.body.deliveryAvailable === true && !req.body.serviceRadius) {
       return res.status(400).json({
         success: false,
-        message: "Service radius is required when delivery is available"
+        message: "Service radius is required when delivery is available",
       });
     }
 
@@ -99,26 +112,26 @@ export const registerMess = async (req, res) => {
       upiId: req.body.upiId,
       paymentPhone: req.body.paymentPhone,
       photos: Array.isArray(req.body.photos) ? req.body.photos : [],
-      documents: Array.isArray(req.body.documents) ? req.body.documents : []
+      documents: Array.isArray(req.body.documents) ? req.body.documents : [],
     };
 
     // Add meal timings if provided
     if (req.body.breakfastStart || req.body.breakfastEnd) {
       newMess.breakfastTimings = {
         start: req.body.breakfastStart,
-        end: req.body.breakfastEnd
+        end: req.body.breakfastEnd,
       };
     }
     if (req.body.lunchStart || req.body.lunchEnd) {
       newMess.lunchTimings = {
         start: req.body.lunchStart,
-        end: req.body.lunchEnd
+        end: req.body.lunchEnd,
       };
     }
     if (req.body.dinnerStart || req.body.dinnerEnd) {
       newMess.dinnerTimings = {
         start: req.body.dinnerStart,
-        end: req.body.dinnerEnd
+        end: req.body.dinnerEnd,
       };
     }
 
@@ -126,9 +139,8 @@ export const registerMess = async (req, res) => {
     res.status(201).json({
       success: true,
       data: mess,
-      message: "Mess registered successfully"
+      message: "Mess registered successfully",
     });
-
   } catch (error) {
     console.error("Error registering mess:", error);
     if (error.name === "ValidationError") {
