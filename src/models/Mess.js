@@ -47,7 +47,7 @@
 // //   subscription : {
 // //     name : {
 // //       type : String,
-// //     } , 
+// //     } ,
 // //     price : {
 // //       type : Number
 // //     }
@@ -63,7 +63,7 @@
 // //   subscriptionPlans: [
 // //     {
 // //       type: mongoose.Schema.Types.ObjectId,
-// //       ref: 'Subscription', 
+// //       ref: 'Subscription',
 // //     },
 // //   ],
 // //   photos: [
@@ -196,7 +196,7 @@
 // export default mongoose.model('Mess', messSchema);
 
 // models/Mess.js
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
@@ -207,6 +207,7 @@ const messSchema = new Schema({
   email: { type: String },
   mobile: { type: String },
   address: { type: String },
+  role: { type: String, default: "mess" },
 
   // Service Details
   messType: { type: String, enum: ["veg", "non-veg", "both"] },
@@ -307,5 +308,4 @@ const messSchema = new Schema({
 
 // Pre-validation hook removed (no validation needed)
 
-export const Mess = mongoose.model('Mess', messSchema);
-
+export const Mess = mongoose.model("Mess", messSchema);

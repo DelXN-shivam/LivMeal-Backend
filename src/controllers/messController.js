@@ -139,6 +139,7 @@ export const registerMess = async (req, res) => {
     res.status(201).json({
       success: true,
       data: mess,
+      role: "mess",
       message: "Mess registered successfully",
     });
   } catch (error) {

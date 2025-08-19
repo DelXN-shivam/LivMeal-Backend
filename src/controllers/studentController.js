@@ -23,9 +23,10 @@ export const studentRegister = async (req, res) => {
         })
 
         return res.status(200).json({
-            message: "Student registered successfully",
-            data: newStudent
-        })
+          message: "Student registered successfully",
+          role: "student",
+          data: newStudent,
+        });
 
     } catch (err) {
 
