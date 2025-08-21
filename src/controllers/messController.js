@@ -1,51 +1,5 @@
 import { Mess } from "../models/Mess.js";
 
-// export const updateById = async (req, res) => {
-//     const { id } = req.params;
-//     const updateFields = req.body;
-
-//     // Define allowed fields from your schema
-//     const allowedFields = [
-//         'messName', 'messOwnerName', 'email', 'contact', 'messAddress',
-//         'mealTypes', 'messTimings', 'deliveryAvailable',
-//         'subscription', 'photos', 'isVerified'
-//     ];
-
-//     // Filter out invalid fields
-//     const sanitizedFields = {};
-//     Object.entries(updateFields).forEach(([key, value]) => {
-//         if (allowedFields.includes(key) && value !== undefined && value !== '' &&
-//             !(typeof value === 'object' && Object.keys(value).length === 0)) {
-//             sanitizedFields[key] = value;
-//         }
-//     });
-
-//     // Check if any valid fields were provided
-//     if (Object.keys(sanitizedFields).length === 0) {
-//         return res.status(400).json({ message: 'No valid fields provided for update' });
-//     }
-
-//     try {
-//         const updatedMess = await Mess.findByIdAndUpdate(
-//             id,
-//             { $set: sanitizedFields },
-//             { new: true, runValidators: true, strict: true }
-//         );
-
-//         if (!updatedMess) {
-//             return res.status(404).json({ message: 'Mess not found' });
-//         }
-
-//         res.status(200).json(updatedMess);
-//     } catch (error) {
-//         console.error('Error updating mess:', error);
-//         res.status(500).json({
-//             message: 'Server error',
-//             error: error.message
-//         });
-//     }
-// };
-
 // Register a new mess
 export const registerMess = async (req, res) => {
   try {
