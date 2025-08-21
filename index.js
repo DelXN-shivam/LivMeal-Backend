@@ -16,7 +16,11 @@ app.use(express.json());
 // CORS configuration
 app.use(
   cors({
-    origin: ['http://localhost:3000', '*' , 'https://liv-meal-backend.vercel.app'], // Allow localhost:3000 and all origins
+    origin: [
+      "http://localhost:3500",
+      "*",
+      "https://liv-meal-backend.vercel.app",
+    ], // Allow localhost:3000 and all origins
     credentials: true,
   })
 );

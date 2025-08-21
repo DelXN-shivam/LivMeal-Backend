@@ -11,6 +11,7 @@ const studentSchema = new mongoose.Schema({
   },
   contact: {
     type: String,
+    unique: true,
   },
   gender: {
     type: String,

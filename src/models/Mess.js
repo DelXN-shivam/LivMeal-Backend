@@ -7,8 +7,8 @@ const messSchema = new Schema({
   // Basic Info
   messName: { type: String },
   ownerName: { type: String },
-  email: { type: String },
-  mobile: { type: String },
+  email: { type: String, unique: true },
+  mobile: { type: String, unique: true },
   address: { type: String },
   role: { type: String, default: "mess" },
 
@@ -59,6 +59,7 @@ const messSchema = new Schema({
   },
   documents: {
     type: [String],
+    default: [],
   },
   subscription: {
     type: [
@@ -86,25 +87,8 @@ const messSchema = new Schema({
   ],
   reviews: [
     {
-      imgUrl: {
-        type: String,
-      },
-      name: {
-        type: String,
-      },
-      rating: {
-        type: Number,
-      },
-      description: {
-        type: String,
-      },
-      studentId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "student",
-      },
-      createdAt: {
-        type: String,
-      },
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Review",
     },
   ],
 });
