@@ -1,8 +1,4 @@
-
-import fs from 'fs';
-import path from 'path';
-import { Mess } from '../models/Mess.js';
-
+import { Mess } from "../models/Mess.js";
 
 // export const updateById = async (req, res) => {
 //     const { id } = req.params;
@@ -49,11 +45,6 @@ import { Mess } from '../models/Mess.js';
 //         });
 //     }
 // };
-
-
-
-
-
 
 // Register a new mess
 export const registerMess = async (req, res) => {
@@ -145,27 +136,26 @@ export const registerMess = async (req, res) => {
   } catch (error) {
     console.error("Error registering mess:", error);
     if (error.name === "ValidationError") {
-      const messages = Object.values(error.errors).map(val => val.message);
+      const messages = Object.values(error.errors).map((val) => val.message);
       return res.status(400).json({
         success: false,
         message: "Validation error",
-        errors: messages
+        errors: messages,
       });
     }
     if (error.code === 11000) {
       return res.status(400).json({
         success: false,
-        message: "Email already registered"
+        message: "Email already registered",
       });
     }
     res.status(500).json({
       success: false,
       message: "Server error",
-      error: error.message
+      error: error.message,
     });
   }
 };
-
 
 // Get all messes
 export const getAllMesses = async (req, res) => {
@@ -174,13 +164,13 @@ export const getAllMesses = async (req, res) => {
     res.status(200).json({
       success: true,
       count: messes.length,
-      data: messes
+      data: messes,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Server error',
-      error: error.message
+      message: "Server error",
+      error: error.message,
     });
   }
 };
@@ -192,18 +182,18 @@ export const getMess = async (req, res) => {
     if (!mess) {
       return res.status(404).json({
         success: false,
-        message: 'Mess not found'
+        message: "Mess not found",
       });
     }
     res.status(200).json({
       success: true,
-      data: mess
+      data: mess,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Server error',
-      error: error.message
+      message: "Server error",
+      error: error.message,
     });
   }
 };
@@ -243,38 +233,37 @@ export const loginByContact = async (req, res) => {
   }
 };
 
-
 // Update mess
 export const updateMess = async (req, res) => {
   try {
     const mess = await Mess.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
-      runValidators: true
+      runValidators: true,
     });
     if (!mess) {
       return res.status(404).json({
         success: false,
-        message: 'Mess not found'
+        message: "Mess not found",
       });
     }
     res.status(200).json({
       success: true,
       data: mess,
-      message: 'Mess updated successfully'
+      message: "Mess updated successfully",
     });
   } catch (error) {
-    if (error.name === 'ValidationError') {
-      const messages = Object.values(error.errors).map(val => val.message);
+    if (error.name === "ValidationError") {
+      const messages = Object.values(error.errors).map((val) => val.message);
       return res.status(400).json({
         success: false,
-        message: 'Validation error',
-        errors: messages
+        message: "Validation error",
+        errors: messages,
       });
     }
     res.status(500).json({
       success: false,
-      message: 'Server error',
-      error: error.message
+      message: "Server error",
+      error: error.message,
     });
   }
 };
@@ -282,27 +271,29 @@ export const updateMess = async (req, res) => {
 // Delete mess (soft delete)
 export const deleteMess = async (req, res) => {
   try {
-    const mess = await Mess.findByIdAndUpdate(req.params.id, {
-      isActive: false
-    }, { new: true });
+    const mess = await Mess.findByIdAndUpdate(
+      req.params.id,
+      {
+        isActive: false,
+      },
+      { new: true }
+    );
     if (!mess) {
       return res.status(404).json({
         success: false,
-        message: 'Mess not found'
+        message: "Mess not found",
       });
     }
     res.status(200).json({
       success: true,
       data: {},
-      message: 'Mess deactivated successfully'
+      message: "Mess deactivated successfully",
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Server error',
-      error: error.message
+      message: "Server error",
+      error: error.message,
     });
   }
 };
-
-

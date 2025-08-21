@@ -3,7 +3,6 @@ import { Mess } from "../models/Mess.js";
 
 export const unifiedLoginByContact = async (req, res) => {
   try {
-    // const { contact } = req.body;
     const contact = req.params.contact;
 
     if (!contact) {
@@ -45,7 +44,7 @@ export const unifiedLoginByContact = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Server error",
-      error: error.message
+      error: error.message,
     });
   }
 };

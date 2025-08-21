@@ -1,9 +1,11 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import { connectDB } from './src/config/db.js';
-import rootRouter from './src/routes/index.js';
-import cors from 'cors';
-import cron from 'node-cron';
+import express from "express";
+import dotenv from "dotenv";
+import { connectDB } from "./src/config/db.js";
+import rootRouter from "./src/routes/index.js";
+import cors from "cors";
+import cron from "node-cron";
+import helmet from "helmet";
+
 // Load env variables first
 dotenv.config();
 
@@ -12,6 +14,7 @@ const PORT = process.env.PORT || 3500;
 
 // Middleware to parse JSON
 app.use(express.json());
+app.use(helmet());
 
 // CORS configuration
 app.use(
@@ -25,13 +28,12 @@ app.use(
   })
 );
 
-
 // Health check route (no DB connection needed)
 app.get("/health", (req, res) => {
   res.status(200).json({
     status: "OK",
     message: "LivMeal Server is healthy",
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -44,41 +46,45 @@ app.get("/", async (req, res) => {
     res.status(200).json({
       message: "LivMeal Server running successfully!",
       status: "Connected to Database",
-      environment: process.env.NODE_ENV || 'development',
-      timestamp: new Date().toISOString()
+      environment: process.env.NODE_ENV || "development",
+      timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('Database connection error:', error.message);
+    console.error("Database connection error:", error.message);
     res.status(200).json({
       message: "LivMeal Server is running",
       status: "Database connection failed",
       error: error.message,
-      environment: process.env.NODE_ENV || 'development',
-      timestamp: new Date().toISOString()
+      environment: process.env.NODE_ENV || "development",
+      timestamp: new Date().toISOString(),
     });
   }
 });
 
 // API routes with database connection middleware
-app.use("/api/v1", async (req, res, next) => {
-  try {
-    await connectDB();
-    next();
-  } catch (error) {
-    console.error('API Database connection error:', error.message);
-    res.status(500).json({
-      error: "Database connection failed",
-      message: error.message
-    });
-  }
-}, rootRouter);
+app.use(
+  "/api/v1",
+  async (req, res, next) => {
+    try {
+      await connectDB();
+      next();
+    } catch (error) {
+      console.error("API Database connection error:", error.message);
+      res.status(500).json({
+        error: "Database connection failed",
+        message: error.message,
+      });
+    }
+  },
+  rootRouter
+);
 
 // Global error handler
 app.use((error, req, res, next) => {
-  console.error('Global error:', error);
+  console.error("Global error:", error);
   res.status(500).json({
     error: "Internal Server Error",
-    message: error.message
+    message: error.message,
   });
 });
 
@@ -86,32 +92,35 @@ app.use((error, req, res, next) => {
 app.use((req, res) => {
   res.status(404).json({
     error: "Route not found",
-    message: `Route ${req.method} ${req.path} not found`
+    message: `Route ${req.method} ${req.path} not found`,
   });
 });
 
 // Start server (for local development only)
-if (process.env.NODE_ENV !== 'production') {
-  app.listen(PORT, () => {
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, async () => {
+    await connectDB();
     console.log(`🚀 Server started on port ${PORT}`);
   });
 }
 
-//cronjob 
+//cronjob
 // Add this to your existing routes or create api/cron.js
 // cronjob - Ping your own Vercel base URL every 10 minutes
-cron.schedule('*/10 * * * *', async () => {
-  const URL = 'https://liv-meal-backend.vercel.app/'; // base URL
+cron.schedule("*/10 * * * *", async () => {
+  const URL = "https://liv-meal-backend.vercel.app/";
 
   try {
     const response = await fetch(URL);
-    console.log(`[CRON] Pinged ${URL} - Status: ${response.status} at ${new Date().toISOString()}`);
+    console.log(
+      `[CRON] Pinged ${URL} - Status: ${
+        response.status
+      } at ${new Date().toISOString()}`
+    );
   } catch (error) {
-    console.error('[CRON] Error pinging base URL:', error.message);
+    console.error("[CRON] Error pinging base URL:", error.message);
   }
 });
-
-
 
 // Export for Vercel
 export default app;

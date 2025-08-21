@@ -3,50 +3,46 @@ import mongoose from 'mongoose';
 const MessMenuSchema = new mongoose.Schema({
   messId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Mess', // Link to Mess collection
-    required: true
+    ref: "Mess",
+    required: true,
   },
-  dietaryPreferences: [String], // e.g. ['Jain', 'Vegan', 'Keto']
+  dietaryPreferences: [String],
   menu: [
     {
       day: {
         type: String,
         enum: [
-          'Monday',
-          'Tuesday',
-          'Wednesday',
-          'Thursday',
-          'Friday',
-          'Saturday',
-          'Sunday'
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+          "Sunday",
         ],
-        required: true
+        required: true,
       },
       meals: [
         {
           mealType: {
             type: String,
-            enum: ['Breakfast', 'Lunch', 'Dinner'],
-            required: true
+            enum: ["Breakfast", "Lunch", "Dinner"],
+            required: true,
           },
-          items: [String], // List of dishes
+          items: [String],
           price: {
             type: Number,
-            required: true
+            required: true,
           },
-          calories: Number
-        }
-      ]
-    }
+          calories: Number,
+        },
+      ],
+    },
   ],
-//   isVerified: {
-//     type: Boolean,
-//     default: false
-//   },
   createdAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
 const MessMenu = mongoose.model('MessMenu', MessMenuSchema);

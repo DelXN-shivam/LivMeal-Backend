@@ -1,6 +1,6 @@
 // controllers/messMenuController.js
-import MessMenu from '../models/MessMenu.js';
-import {Mess} from '../models/Mess.js'; // Import Mess model (default export)
+import MessMenu from "../models/MessMenu.js";
+import { Mess } from "../models/Mess.js";
 
 export const registerMessMenu = async (req, res) => {
   try {
@@ -8,14 +8,16 @@ export const registerMessMenu = async (req, res) => {
 
     // Basic validation
     if (!messId || !menu || menu.length === 0) {
-      return res.status(400).json({ message: 'Mess ID, type, and menu are required.' });
+      return res
+        .status(400)
+        .json({ message: "Mess ID, type, and menu are required." });
     }
 
     // Create new MessMenu document
     const newMessMenu = new MessMenu({
       messId,
       dietaryPreferences,
-      menu
+      menu,
     });
 
     await newMessMenu.save();
@@ -28,11 +30,11 @@ export const registerMessMenu = async (req, res) => {
     );
 
     res.status(201).json({
-      message: 'Mess menu registered successfully and linked to mess',
-      data: newMessMenu
+      message: "Mess menu registered successfully and linked to mess",
+      data: newMessMenu,
     });
   } catch (error) {
-    console.error('Error registering mess menu:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    console.error("Error registering mess menu:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
